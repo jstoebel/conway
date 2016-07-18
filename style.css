@@ -1,0 +1,28 @@
+.square {
+    float:left;
+    position: relative;
+    width: 1%;
+    padding-bottom : 1%; /* = width for a 1:1 aspect ratio */
+    overflow:hidden;
+    border: 1px solid black;
+}
+
+.content {
+    position:absolute;
+    height:100%; /* = 100% - 2*5% padding */
+    width:100%; /* = 100% - 2*5% padding */
+
+}
+/*
+.table{
+    display:table;
+    width:100%;
+    height:100%;
+}
+.table-cell{
+    display:table-cell;
+    vertical-align:middle;
+    text-align: center;
+
+    font-size: 72pt;
+}*/
