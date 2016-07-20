@@ -1,7 +1,7 @@
 var Cell = React.createClass({
 
   getInitialState: function(){
-    return {"live": false}
+    return {"live": this.props.startValue}
   },
 
   componentWillMount: function(){
@@ -19,7 +19,6 @@ var Cell = React.createClass({
   },
 
   render: function(){
-
     var style = {
       "backgroundColor": this.state.live ? "red" : "white"
     }
@@ -39,11 +38,12 @@ var Cell = React.createClass({
 
 var Board = React.createClass({
 
-  eachCell: function(cell, cell_index){
+  eachCell: function(startValue, cell_index){
     var cellId = "cell"+cell_index
     return  (
       <Cell
-        key={cellId}>
+        key={cellId}
+        startValue={startValue}>
       </Cell>
     )
 
@@ -51,10 +51,20 @@ var Board = React.createClass({
 
   render: function(){
 
+    var cells = this.props.structure.map(function(row, row_i){
+      var cell = row.map(function(cellValue, col_i){
+        return (
+          <Cell
+            key={row_i+col_i}
+            startValue={cellValue} />
+        )
+      })
+    })
+
     return (
       <div className="container">
         <div className="panel-group" id="accordion">
-          {this.props.structure.map(this.eachCell)}
+          {cells}
         </div>
       </div>
     )
@@ -62,18 +72,15 @@ var Board = React.createClass({
 
 })
 
-// var cells = [];
-// for (var i=0; i<10; i++){
-//   var row = [];
-//   for (var j=0; j<10; j++){
-//     row.push(j);
-//   }
-//   cells.push(row);
-// }
-
 var cells = [];
-for (var i=0; i<5000; i++){
-  cells.push(i)
+// make a board 50 wide and 25 tall
+for (var h=0; h<25; h++){
+  var cell_row = [];
+  for (var w=0; w<50;  w++){
+    cell_row.push(Math.round(Math.random()));
+  }
+    cells.push(cell_row);
 }
+
 
 React.render(<Board structure={cells} />, document.getElementById('container-fluid'));

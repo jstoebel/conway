@@ -1,8 +1,8 @@
 .square {
     float:left;
     position: relative;
-    width: 1%;
-    padding-bottom : 1%; /* = width for a 1:1 aspect ratio */
+    width: 2%;
+    padding-bottom : 2%; /* = width for a 1:1 aspect ratio */
     overflow:hidden;
     border: 1px solid black;
 }
