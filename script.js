@@ -38,6 +38,9 @@ var Cell = React.createClass({
 
 var Board = React.createClass({
 
+  getInitialState: function(){
+    return({running: true})
+  },
 
   step: function(){
     //one step of the game
@@ -73,6 +76,7 @@ var Board = React.createClass({
 
     } // getNeighboors
 
+    // for each cell decide its fate.
     var structure = this.props.structure;
     for(var r=0; r<structure.length; r++){
       //iterate over each row in stucture
@@ -99,9 +103,7 @@ var Board = React.createClass({
           }
         }
       }
-
     }
-
   },
 
   componentDidMount: function(){
@@ -109,7 +111,25 @@ var Board = React.createClass({
     //   console.log(row)
     // })
 
-    setInterval(this.step, 1000);
+    var board = this;
+    this.intervalId = setInterval(function(){
+      if(board.state.running){
+        board.step()
+      }
+    }, 1000);
+
+  },
+
+  go: function(){
+    console.log("starting!")
+    this.setState({running: true})
+
+  },
+
+  stop: function(){
+    // clear the intervalId
+    console.log("stopping!")
+    this.setState({running: false})
 
   },
 
@@ -127,8 +147,8 @@ var Board = React.createClass({
 
     return (
       <div className="container">
-        <div className="btn btn-success">Start</div>
-        <div className="btn btn-danger"> Stop </div>
+        <div className="btn btn-success" onClick={this.go}>Start</div>
+        <div className="btn btn-danger" onClick={this.stop}> Stop </div>
         <div className="panel-group" id="accordion">
           {cells}
         </div>
