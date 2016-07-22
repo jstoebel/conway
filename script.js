@@ -42,6 +42,35 @@ var Board = React.createClass({
     return({running: true})
   },
 
+  eachCell: function(){
+    //returns an iterator traversing the strucutre of the board, returning
+    //each cell coordinates
+
+    var nextR = 0;
+    var nextC = 0;
+    var board = this;
+
+    return {
+      next: function(){
+        if(nextC >= board.props.columns){
+          // ran over, get the next row!
+          nextC = 0;
+          nextR++;
+          if(nextR >= board.props.rows){
+            // off ramp when we reach the end of the board
+              return {done: true}
+          }
+        } else {
+          nextC++;
+        }
+
+        var coords = nextR + "," + nextC;
+        var isDone = (nextR == board.props.rows -1 && nextC == board.props.columns - 1)
+        return {value: coords, done: isDone? true : false }
+      }
+    }
+  },
+
   step: function(){
     //one step of the game
 
@@ -111,12 +140,19 @@ var Board = React.createClass({
     //   console.log(row)
     // })
 
-    var board = this;
-    this.intervalId = setInterval(function(){
-      if(board.state.running){
-        board.step()
-      }
-    }, 1000);
+    var it = this.eachCell();
+
+    do {
+      console.log(it.next())
+
+    } while (!it.done)
+
+    // var board = this;
+    // this.intervalId = setInterval(function(){
+    //   if(board.state.running){
+    //     board.step()
+    //   }
+    // }, 1000);
 
   },
 
@@ -130,6 +166,14 @@ var Board = React.createClass({
     // clear the intervalId
     console.log("stopping!")
     this.setState({running: false})
+
+  },
+
+  clearBoard: function(){
+    //pauses the game and clears the board
+
+    this.setState({running: false});
+
 
   },
 
@@ -147,8 +191,14 @@ var Board = React.createClass({
 
     return (
       <div className="container">
-        <div className="btn btn-success" onClick={this.go}>Start</div>
-        <div className="btn btn-danger" onClick={this.stop}> Stop </div>
+        <div className="btn btn-info" onClick={this.go}>
+          <span className="glyphicon glyphicon-play"></span>
+        </div>
+
+        <div className="btn btn-info" onClick={this.stop}>
+          <span className="glyphicon glyphicon-pause"> </span>
+         </div>
+        <div className="btn btn-danger" onClick={this.clearBoard}> Clear Board </div>
         <div className="panel-group" id="accordion">
           {cells}
         </div>
@@ -169,4 +219,4 @@ for (var h=0; h<25; h++){
 }
 
 
-React.render(<Board structure={cells} />, document.getElementById('container-fluid'));
+React.render(<Board structure={cells} rows={2} columns={3} />, document.getElementById('container-fluid'));
