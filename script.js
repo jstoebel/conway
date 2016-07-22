@@ -127,9 +127,12 @@ var Board = React.createClass({
 
     return (
       <div className="container">
+        <div className="btn btn-success">Start</div>
+        <div className="btn btn-danger"> Stop </div>
         <div className="panel-group" id="accordion">
           {cells}
         </div>
+
       </div>
     )
   }
