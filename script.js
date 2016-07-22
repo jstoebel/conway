@@ -38,37 +38,69 @@ var Cell = React.createClass({
 
 var Board = React.createClass({
 
-  getInitialState: function(){
-    var cells = this.props.structure.map(function(row, row_i){
-      return row.map(function(cellValue, col_i){
-        return (
-          <Cell
-          key={row_i+"-"+col_i}
-          startValue={cellValue} />
-        )
-      })
-    })
-    return {'cells': cells}
-  },
 
   step: function(){
     //one step of the game
 
-    function getNeighboors(row, column){
+    function getNeighboors(ri, ci, board){
       //row(int): a row index
       //column(int): a column index
       //returns an array of all of the neighboors to the cell at coordinates row, column
+      //will contain undefined for boarder cells
 
       var neighboors = [];
-      for(var r=row-1; r<row+2; r++){
-        for(var c=column-1; c<column+2; c++){
-          neighboors.push(this.state.cells[r][c])
+      var strucutre = board.props.strucutre;
+      for(var r=ri-1; r<ri+2; r++){
+        //iterate over each row in stucture
+        var row = board.props.structure[r]
+        if(row != undefined){ //make sure we didn't go out of bounds
+
+          for(var c=ci-1; c<ci+2; c++){
+            //iterate over each item in row
+            if(!(ri==r && ci == c)){
+              //skip the cell in question
+              var cell = board.refs[r+","+c]
+              // make sure its a cell before trying to get its state
+              if(cell !== undefined){neighboors.push(Number(cell.state.live))}
+            }
+          }
+        }
+
+      }
+      return neighboors.reduce(function(prev, cur){
+        return prev + cur
+      }, 0);
+
+    } // getNeighboors
+
+    var structure = this.props.structure;
+    for(var r=0; r<structure.length; r++){
+      //iterate over each row in stucture
+      var row = structure[r]
+      if(row != undefined){   //make sure we didn't go out of bounds
+        for(var c=0; c<row.length; c++){
+          //iterate over each item in row
+            //skip the cell in question
+          var cell = this.refs[r+","+c]
+          // make sure its a cell before trying to get its state
+          if(cell !== undefined){
+            var neighboorCount = getNeighboors(r,c, this);
+
+            if(cell.state.live){
+              //tests for living cell
+              if(neighboorCount < 2 || neighboorCount > 3){
+                cell.setState({live: false})
+              }
+            } else {
+              if(neighboorCount == 3){
+                cell.setState({live: true})
+              }
+            }
+          }
         }
       }
-      return neighboors;
-    }
 
-    return getNeighboors(0, 0).bind(this);
+    }
 
   },
 
@@ -77,18 +109,26 @@ var Board = React.createClass({
     //   console.log(row)
     // })
 
-    console.log(this.step())
+    setInterval(this.step, 1000);
 
   },
 
   render: function(){
-
-
+    var cells = this.props.structure.map(function(row, row_i){
+      return row.map(function(cellValue, col_i){
+        return (
+          <Cell
+          key={row_i+","+col_i}
+          ref={row_i+","+col_i}
+          startValue={cellValue} />
+        )
+      })
+    })
 
     return (
       <div className="container">
         <div className="panel-group" id="accordion">
-          {this.state.cells}
+          {cells}
         </div>
       </div>
     )
