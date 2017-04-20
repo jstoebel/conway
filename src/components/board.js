@@ -1,10 +1,22 @@
 import React, { Component } from 'react';
+import Cell from './cell'
+
 
 class Board extends Component {
 
   constructor() {
     super()
-
+    this.eachCell = this.eachCell.bind(this);
+    this.step = this.step.bind(this);
+    this.go = this.go.bind(this);
+    this.stop = this.stop.bind(this);
+    this.oneStep = this.oneStep.bind(this);
+    this.clearBoard = this.clearBoard.bind(this);
+    this.update = this.update.bind(this);
+    this.componentWillMount = this.componentWillMount.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
+    this.render = this.render.bind(this);
   }
 
   *eachCell() {
@@ -229,3 +241,5 @@ class Board extends Component {
     )
   }
 }
+
+export default Board;

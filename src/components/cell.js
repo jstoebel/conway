@@ -31,7 +31,7 @@ class Cell extends Component {
 
     const outerStyle = {
       backgroundColor: this.state.live ? "red" : "white",
-      floa: "left",
+      float: "left",
       position: "relative",
       width: "2%",
       paddingBottom: "2%", /* = width for a 1:1 aspect ratio */
@@ -58,4 +58,4 @@ class Cell extends Component {
   }
 }
 
-export default Cell
+export default Cell;
